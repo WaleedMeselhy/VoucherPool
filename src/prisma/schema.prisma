@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String @unique
+
+  VoucherCode VoucherCode[]
+}
+
+model SpecialOffer {
+  id                      Int           @id @default(autoincrement())
+  name                    String
+  fixedPercentageDiscount Int
+  VoucherCode             VoucherCode[]
+}
+
+model VoucherCode {
+  id               Int            @id @default(autoincrement())
+  uniqueCode       String         @unique
+  expirationDate   DateTime
+  isSingleUse      Boolean
+  customer         Customer       @relation(fields: [customerId], references: [id])
+  customerId       Int
+  specialOfferId   Int
+  specialOffer     SpecialOffer   @relation(fields: [specialOfferId], references: [id])
+  firstDateOfUsage DateTime?
+  VoucherUsage     VoucherUsage[]
+}
+
+model VoucherUsage {
+  id            Int         @id @default(autoincrement())
+  usageDate     DateTime
+  voucherCodeId Int
+  voucherCode   VoucherCode @relation(fields: [voucherCodeId], references: [id])
+}

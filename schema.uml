@@ -1,0 +1,54 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+entity "**Customer**" {
+  + ""id"": //serial [PK]//
+  --
+  *""name"": //text //
+  *""email"": //text //
+}
+
+entity "**SpecialOffer**" {
+  + ""id"": //serial [PK]//
+  --
+  *""name"": //text //
+  *""fixedPercentageDiscount"": //integer //
+}
+
+entity "**VoucherCode**" {
+  + ""id"": //serial [PK]//
+  --
+  *""uniqueCode"": //text //
+  *""expirationDate"": //timestamp(3) without time zone //
+  *""isSingleUse"": //boolean //
+  *""customerId"": //integer [FK]//
+  *""specialOfferId"": //integer [FK]//
+  ""firstDateOfUsage"": //timestamp(3) without time zone //
+}
+
+entity "**VoucherUsage**" {
+  + ""id"": //serial [PK]//
+  --
+  *""usageDate"": //timestamp(3) without time zone //
+  *""voucherCodeId"": //integer [FK]//
+}
+
+entity "**_prisma_migrations**" {
+  + ""id"": //character varying(36) [PK]//
+  --
+  *""checksum"": //character varying(64) //
+  ""finished_at"": //timestamp with time zone //
+  *""migration_name"": //character varying(255) //
+  ""logs"": //text //
+  ""rolled_back_at"": //timestamp with time zone //
+  *""started_at"": //timestamp with time zone //
+  *""applied_steps_count"": //integer //
+}
+
+"**VoucherCode**"   }--  "**Customer**"
+
+"**VoucherCode**"   }--  "**SpecialOffer**"
+
+"**VoucherUsage**"   }--  "**VoucherCode**"
+@enduml
